@@ -1,0 +1,31 @@
+{
+  "question": "With scarce labeled chatbot text and the same augmentation, can one CV-tuned word+character TF-IDF logistic-regression model match or beat a soft-voting ensemble of several classifiers on intent accuracy?",
+  "method": "CLINC150 in-scope queries (data_small.json); 10 labeled training queries per intent subsampled from the official train split, each plus 4 random word dropout/swap copies; evaluated on the official in-scope test split; 3 seeds (subsample + augmentation).",
+  "dataset": {
+    "name": "CLINC150 (data_small, in-scope only)",
+    "source_url": "https://raw.githubusercontent.com/clinc/oos-eval/master/data/data_small.json",
+    "n_rows": 15000,
+    "n_train": 1500,
+    "n_test": 4500,
+    "same_as_paper": false,
+    "baseline_is_papers_method": false
+  },
+  "metric_name": "test accuracy",
+  "higher_is_better": true,
+  "baseline": "Soft-voting ensemble of logistic regression, calibrated linear SVM and complement naive Bayes on word (1-2gram) TF-IDF, trained on original + augmented queries (stand-in for the paper's transformer ensemble).",
+  "improved": "Single logistic regression on word + character TF-IDF with C in {1,10,100} chosen by 3-fold group-aware CV on the training set, same augmented data.",
+  "metrics": {
+    "baseline_score": 0.790962962962963,
+    "improved_score": 0.8231851851851851,
+    "baseline_score_std": 0.006871742899738709,
+    "improved_score_std": 0.007771072947794625,
+    "improvement": 0.03222222222222215,
+    "baseline_f1": 0.7878302879447032,
+    "improved_f1": 0.8202690649946701,
+    "baseline_f1_std": 0.006885095463503451,
+    "improved_f1_std": 0.008212651580040253,
+    "baseline_train_seconds": 6.23335846265157,
+    "improved_train_seconds": 38.56339740753174
+  },
+  "notes": "T5/transformers and human augmentation replaced by simple random perturbation; baseline is not the paper's method. n_train is the number of original labeled queries (augmented set is 5x larger). Official val split unused; the official test split is used once per model. Baseline uses word features only and fixed hyper-parameters, so feature set and tuning both differ from the improved model. Selected C per seed: [1, 10, 10]. Std is over 3 seeds, which change the subsample and augmentation. SVM calibration inside the ensemble uses internal CV that is not group-aware."
+}
