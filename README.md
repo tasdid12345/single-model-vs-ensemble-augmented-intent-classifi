@@ -24,6 +24,28 @@ python analysis.py
 ## Results
 Results are written to `results.json` (and a chart to `figures/`).
 
+## Results (latest run)
+
+On the CLINC150 in-scope test split (10 labeled queries per intent, 3 seeds), a CV-tuned word+character TF-IDF logistic regression reached 82.3% test accuracy versus 79.1% for a soft-voting ensemble of classical classifiers, a gain of about 3.2 points with seed std near 0.8.
+
+| Metric | Value |
+|---|---|
+| baseline_score | 0.791 |
+| improved_score | 0.8232 |
+| baseline_score_std | 0.006872 |
+| improved_score_std | 0.007771 |
+| improvement | 0.03222 |
+| baseline_f1 | 0.7878 |
+| improved_f1 | 0.8203 |
+| baseline_f1_std | 0.006885 |
+| improved_f1_std | 0.008213 |
+| baseline_train_seconds | 6.233 |
+| improved_train_seconds | 38.56 |
+
+Run on 2026-10-11. Full output: [results.json](results.json) · [run.log](run.log)
+
+Notes: T5/transformers and human augmentation replaced by simple random perturbation; baseline is not the paper's method. n_train is the number of original labeled queries (augmented set is 5x larger). Official val split unused; the official test split is used once per model. Baseline uses word features only and fixed hyper-parameters, so feature set and tuning both differ from the improved model. Selected C per seed: [1, 10, 10]. Std is over 3 seeds, which change the subsample and augmentation. SVM calibration inside the ensemble uses internal CV that is not group-aware.
+
 ## Reference
 
 This project is motivated by the following paper:
